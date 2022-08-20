@@ -22,12 +22,13 @@ function School() {
   React.useEffect(() => {
     const GetSchoolData = async () => {
       await axios
-        .get(`http://147.50.231.136/api/school`)
+        .get(`${process.env.REACT_APP_API}/school`)
         .then((res) => setData(res.data))
         .catch((err) => console.error(err))
     }
     GetSchoolData()
   }, [])
+
   return (
     <div>
       <Box sx={{ height: 400, width: '100%' }}>

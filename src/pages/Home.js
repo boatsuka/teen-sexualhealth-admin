@@ -1,8 +1,10 @@
 import React from 'react'
 import * as axios from 'axios'
 import { Box } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid'
-
+import { toast } from 'react-toastify'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid'
 
 function Home() {
   const [data, setData] = React.useState([])
@@ -32,15 +34,41 @@ function Home() {
       width: 110,
       editable: true,
     },
+    {
+      field: 'actions',
+      type: 'actions',
+      width: 100,
+      getActions: (params) => [
+        <GridActionsCellItem icon={<EditIcon />} label='Edit' onClick={() => console.log(params.id)}/>,
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label='Delete'
+          onClick={() => DeleteUserData(params.id)}
+        />,
+      ],
+    },
   ]
 
+  const GetUserData = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_API}/user/all`)
+      .then((res) => setData(res.data))
+      .catch((err) => console.error(err))
+  }
+
+  const DeleteUserData = async (id) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API}/user/delete/${id}`)
+      .then(() => {
+        toast.success('ลบข้อมูลสำเร้จแล้ว')
+        GetUserData()
+      })
+      .catch((err) => {
+        toast.error(`เกิดข้อผิดพลาด ${err}`)
+      })
+  }
+
   React.useEffect(() => {
-    const GetUserData = async () => {
-      await axios
-        .get(`http://147.50.231.136/api/user/all`)
-        .then((res) => setData(res.data))
-        .catch((err) => console.error(err))
-    }
     GetUserData()
   }, [])
 

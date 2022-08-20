@@ -1,4 +1,6 @@
 import React from 'react'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
 import { ThemeProvider, createTheme } from '@mui/material'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
@@ -38,6 +40,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
+      <ToastContainer />
     </React.Fragment>
   )
 }
