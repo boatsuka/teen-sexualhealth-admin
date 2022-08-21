@@ -1,3 +1,4 @@
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid'
 import React from 'react'
 import * as axios from 'axios'
 import {
@@ -14,15 +15,18 @@ import { useForm } from 'react-hook-form'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import PreviewIcon from '@mui/icons-material/Preview'
-import { SchoolOutlined } from '@mui/icons-material'
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid'
 
 import StockCard from '../components/StockCard'
+import { People } from '@mui/icons-material'
 
-function Teacher() {
+function Home() {
   const [data, setData] = React.useState([])
   const [open, setOpen] = React.useState(false)
   const { reset, register, handleSubmit } = useForm()
+
+  React.useEffect(() => {
+    GetUserData()
+  }, [])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -34,19 +38,31 @@ function Teacher() {
 
   const columns = [
     {
-      field: 'teacher_thai_firstname',
-      headerName: 'ชื่อ',
+      field: 'user_loginname',
+      headerName: 'ชื่อผู้ใช้งาน',
       width: 150,
     },
     {
-      field: 'teache_thai_lastname',
-      headerName: 'นามสกุล',
+      field: 'user_full_name',
+      headerName: 'ชื่อ-นามสกุล',
       width: 150,
     },
     {
-      field: 'teacher_nick_name',
-      headerName: 'ชื่อเล่น',
+      field: 'user_email',
+      headerName: 'อีเมล์',
+      width: 180,
+      editable: true,
+    },
+    {
+      field: 'user_telephone',
+      headerName: 'เบอร์โทรศัพท์',
       width: 150,
+      editable: true,
+    },
+    {
+      field: 'user_last_update',
+      headerName: 'เวลา',
+      width: 180,
     },
     {
       field: 'actions',
@@ -66,54 +82,44 @@ function Teacher() {
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label='Delete'
-          onClick={() => DeleteTeacherData(params.id)}
+          onClick={() => DeleteUserData(params.id)}
         />,
       ],
     },
   ]
 
-  const onSubmit = async (data) => {
+  const GetUserData = async () => {
     await axios
-      .post(`${process.env.REACT_APP_API}/teacher/create`, {
-        teacher_thai_firstname: data.teacher_thai_firstname,
-        teache_thai_lastname: data.teache_thai_lastname,
-        teacher_nick_name: data.teacher_nick_name,
-        teacher_nickname_sound_path: 'string',
-        teacher_image_path: 'string',
-      })
-      .then(() => {
-        toast.success('เพิ่มข้อมูลคุณครูสำเร็จ')
-        setOpen(false)
-        reset()
-        GetTeacherData()
-      })
-      .catch((err) => {
-        toast.error(err)
-      })
-  }
-
-  const GetTeacherData = async () => {
-    await axios
-      .get(`${process.env.REACT_APP_API}/teacher`)
+      .get(`${process.env.REACT_APP_API}/user/all`)
       .then((res) => setData(res.data))
       .catch((err) => console.error(err))
   }
 
-   const DeleteTeacherData = async (id) => {
-     await axios
-       .delete(`${process.env.REACT_APP_API}/teacher/remove/${id}`)
-       .then(() => {
-         toast.success('ลบข้อมูลสำเร็จแล้ว')
-         GetTeacherData()
-       })
-       .catch((err) => {
-         toast.error(`เกิดข้อผิดพลาด ${err}`)
-       })
-   }
+  const DeleteUserData = async (id) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API}/user/delete/${id}`)
+      .then(() => {
+        toast.success('ลบข้อมูลสำเร็จแล้ว')
+        GetUserData()
+      })
+      .catch((err) => {
+        toast.error(`เกิดข้อผิดพลาด ${err}`)
+      })
+  }
 
-  React.useEffect(() => {
-    GetTeacherData()
-  }, [])
+  const onSubmit = async (data) => {
+    await axios.post(`${process.env.REACT_APP_API}/user/create`, {
+      user_loginname: data.user_loginname,
+      user_password: data.user_password,
+      user_full_name: data.user_full_name,
+      user_email: data.user_email,
+      user_telephone: data.user_telephone,
+    })
+    await toast.success('เพิ่มข้อมูลผุ้ใช้งานสำเร็จ')
+    await setOpen(false)
+    await reset()
+    await GetUserData()
+  }
 
   const ShowDialog = () => {
     return (
@@ -129,19 +135,32 @@ function Teacher() {
               fullWidth
               label='ชื่อผู้ใช้งาน'
               style={{ marginTop: 16 }}
-              {...register('teacher_thai_firstname')}
+              {...register('user_loginname')}
             />
             <TextField
               fullWidth
-              label='นามสกุล'
+              label='รหัสผ่าน'
+              type={"password"}
               style={{ marginTop: 16 }}
-              {...register('teache_thai_lastname')}
+              {...register('user_password')}
             />
             <TextField
               fullWidth
-              label='ชื่อเล่น'
+              label='ชื่อ-นามสกุล'
+              style={{ marginTop: 16 }}
+              {...register('user_full_name')}
+            />
+            <TextField
+              fullWidth
+              label='อีเมล์'
+              style={{ marginTop: 16 }}
+              {...register('user_email')}
+            />
+            <TextField
+              fullWidth
+              label='เบอร์โทรศัพท์'
               style={{ marginTop: 16, marginBottom: 16 }}
-              {...register('teacher_nick_name')}
+              {...register('user_telephone')}
             />
             <Button type='submit' fullWidth variant='outlined' autoFocus>
               ยืนยัน
@@ -162,32 +181,32 @@ function Teacher() {
       >
         <Grid item xs={2} sm={4} md={4}>
           <StockCard
-            icon={SchoolOutlined}
-            title='คุณครูทั้งหมด'
-            subtitle='9 คน'
+            icon={People}
+            title='ผู้ใช้ทั้งหมด'
+            subtitle='10 คน'
             color='#00a65a'
           />
         </Grid>
         <Grid item xs={2} sm={4} md={4}>
           <StockCard
-            icon={SchoolOutlined}
-            title='คุณครูผู้รับผิดชอบระบบ'
-            subtitle='3 คน'
+            icon={People}
+            title='ผู้ใช้งานที่เปิดใช้งาน'
+            subtitle='10 คน'
             color='#F4D03F'
           />
         </Grid>
         <Grid item xs={2} sm={4} md={4}>
           <StockCard
-            icon={SchoolOutlined}
-            title='คุณครูที่ใช้งานอยู่'
-            subtitle='6'
+            icon={People}
+            title='ผู้ใช้งานที่ไม่ได้เปิดใช้งาน'
+            subtitle='0 คน'
             color='#E67E22'
           />
         </Grid>
       </Grid>
       <Toolbar>
         <Button variant='contained' onClick={handleClickOpen}>
-          เพิ่มข้อมูลครู
+          เพิ่มข้อมูลผู้ใช้งาน
         </Button>
       </Toolbar>
       <Box sx={{ height: 400, width: '100%', top: 100 }}>
@@ -196,7 +215,7 @@ function Teacher() {
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
-          getRowId={(row) => row.teacher_id}
+          getRowId={(row) => row.user_id}
         />
       </Box>
       {ShowDialog()}
@@ -204,4 +223,4 @@ function Teacher() {
   )
 }
 
-export default Teacher
+export default Home
