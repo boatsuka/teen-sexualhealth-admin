@@ -1,6 +1,6 @@
 import React from 'react'
 import * as axios from 'axios'
-import { Box } from '@mui/material'
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 
 function School() {
@@ -31,7 +31,43 @@ function School() {
 
   return (
     <div>
-      <Box sx={{ height: 400, width: '100%' }}>
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
+        <Grid item xs={2} sm={4} md={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h5">{10}</Typography>
+              <Typography variant="p">
+                {10} {10}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={2} sm={4} md={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h5">{10}</Typography>
+              <Typography variant="p">
+                {10} {10}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={2} sm={4} md={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h5">{10}</Typography>
+              <Typography variant="p">
+                {10} {10}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Box sx={{ height: 400, width: "100%", top: 100 }}>
         <DataGrid
           rows={data}
           columns={columns}
@@ -41,7 +77,7 @@ function School() {
         />
       </Box>
     </div>
-  )
+  );
 }
 
 export default School
