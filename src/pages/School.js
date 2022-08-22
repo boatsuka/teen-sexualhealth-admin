@@ -17,8 +17,10 @@ import PreviewIcon from '@mui/icons-material/Preview'
 import { SchoolOutlined } from '@mui/icons-material'
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid'
 import StockCard from '../components/StockCard'
+import { useNavigate } from 'react-router-dom'
 
 function School() {
+  const navigate = useNavigate()
   const [data, setData] = React.useState([])
   const [open, setOpen] = React.useState(false)
   const { reset, register, handleSubmit } = useForm()
@@ -50,8 +52,8 @@ function School() {
       width: 300,
     },
     {
-      field: 'school_last_update',
-      headerName: 'เวลา',
+      field: 'school_code_url',
+      headerName: 'ลิ้งค์',
       width: 200,
     },
     {
@@ -62,7 +64,7 @@ function School() {
         <GridActionsCellItem
           icon={<PreviewIcon />}
           label='Preview'
-          onClick={() => console.log(params.id)}
+          onClick={() => navigate(`/school/${params.id}`)}
         />,
         <GridActionsCellItem
           icon={<EditIcon />}
@@ -117,7 +119,6 @@ function School() {
               label='ชื่อโรงเรียน'
               style={{ marginTop: 16 }}
               {...register('school_thai_name')}
-              school_english_name
             />
             <TextField
               fullWidth
