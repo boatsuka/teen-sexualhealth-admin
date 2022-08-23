@@ -15,6 +15,7 @@ import Layout from './components/Layout'
 import StudentProfile from './pages/StudentProfile'
 import TeacherProfile from './pages/TeacherProfile'
 import Module from './pages/Module'
+import EditSchoolProfile from './pages/EditSchoolProfile'
 
 
 function App() {
@@ -33,11 +34,12 @@ function App() {
               <Route path='/' element={<Dashboard />} />
               <Route path='school' element={<School />} />
               <Route path='school/:id' element={<SchoolProfile />} />
+              <Route path='school/edit/:id' element={<EditSchoolProfile />} />
               <Route path='student' element={<Student />} />
               <Route path='student/:id' element={<StudentProfile />} />
               <Route path='teacher' element={<Teacher />} />
               <Route path='teacher/:id' element={<TeacherProfile />} />
-              <Route path="module" element={<Module />}/>
+              <Route path='module' element={<Module />} />
               <Route path='*' element={<Error />} />
             </Route>
           </Routes>

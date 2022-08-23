@@ -21,21 +21,31 @@ import {
 function TeacherProfile() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [teacher, setTeacher] = React.useState([])
+  const [student, setStudent] = React.useState([])
   const { setValue, register, handleSubmit } = useForm()
 
   const GetSchoolById = React.useCallback(async () => {
     await axios
       .get(`${process.env.REACT_APP_API}/student/teacherbystudent/${id}`)
       .then((res) => {
-       console.log(res.data)
+        setStudent(res.data)
+        const fields = [
+          'teacher_id',
+          'teacher_thai_firstname',
+          'teache_thai_lastname',
+          'teacher_nick_name',
+          'teacher_nickname_sound_path',
+          'teacher_image_path',
+          'teacher_isdelete',
+        ]
+        fields.forEach((field) => setValue(field, res.data[0].teacher[field]))
       })
       .catch((err) => {
         toast.error(err)
       })
-  }, [id, setValue, setTeacher])
+  }, [id, setValue])
 
-  const onEditSchool = async (data) => {
+  const onEditTeacher = async (data) => {
     const linkHref = await window.location.href
     await axios
       .post(`${process.env.REACT_APP_API}/school/${id}`, {
@@ -66,16 +76,24 @@ function TeacherProfile() {
     <div>
       <Card>
         <Grid container>
-          <form onSubmit={handleSubmit(onEditSchool)}>
+          <form onSubmit={handleSubmit(onEditTeacher)}>
             <Box p='1em'>
               <Box display='flex'>
-                <Box flex={1} mr='1em'>
+                <Box flex={3} mr='1em'>
+                  <Avatar
+                    variant='square'
+                    sx={{ width: 200, height: 180 }}
+                  ></Avatar>
+                </Box>
+                <Box flex={6} mr='1em'>
                   <Typography variant='h6' gutterBottom>
                     ชื่อ
                   </Typography>
                   <Box display='flex'>
-                    <Box flex={2} mr='0.5em'>
+                    <Box flex={10} mr='0.5em'>
                       <TextField
+                        disabled
+                        fullWidth
                         size='small'
                         type={'text'}
                         // label='ชื่อโรงเรียน'
@@ -83,71 +101,26 @@ function TeacherProfile() {
                         inputProps={{
                           'aria-label': 'ชื่อโรงเรียน',
                         }}
-                        {...register('school_thai_name')}
+                        {...register('teacher_thai_firstname')}
                       />
                       <TextField
+                        disabled
+                        fullWidth
                         size='small'
                         type={'text'}
                         // label='ชื่อโรงเรียน ภาษาอังกฤษ'
-                        style={{ marginTop: 16, marginLeft: 10 }}
-                        {...register('school_english_name')}
+                        style={{ marginTop: 16 }}
+                        {...register('teache_thai_lastname')}
                       />
                     </Box>
-                    <Box flex={1} ml='0.5em'></Box>
                   </Box>
-                  <Box mt='1em' />
-                  <Typography variant='h5' gutterBottom>
-                    ที่อยู่ติดต่อ
-                  </Typography>
-                  <TextField
-                    size='small'
-                    type={'text'}
-                    // label='บ้านเลขที่'
-                    style={{ marginTop: 16 }}
-                    {...register('school_address_number')}
-                  />
-                  <TextField
-                    size='small'
-                    type={'text'}
-                    // label='ถนน'
-                    style={{ marginTop: 16, marginLeft: 10 }}
-                    {...register('school_road')}
-                  />
-                  <TextField
-                    size='small'
-                    type={'text'}
-                    // label='ตำบล'
-                    style={{ marginTop: 16, marginLeft: 10 }}
-                    {...register('school_subdistrict')}
-                  />
-                  <TextField
-                    size='small'
-                    type={'text'}
-                    // label='อำเภอ'
-                    style={{ marginTop: 16 }}
-                    {...register('school_district')}
-                  />
-                  <TextField
-                    size='small'
-                    type={'text'}
-                    // label='จังหวัด'
-                    style={{ marginTop: 16, marginLeft: 10 }}
-                    {...register('school_province')}
-                  />
-                  <TextField
-                    size='small'
-                    type={'text'}
-                    // label='รหัสไปรษณีย์'
-                    style={{ marginTop: 16, marginLeft: 10 }}
-                    {...register('school_postcode')}
-                  />
                 </Box>
               </Box>
             </Box>
             <Toolbar>
               <Box display='flex' justifyContent='space-between' width='100%'>
                 <Button type='submit' fullWidth variant='contained' autoFocus>
-                  บันทึก
+                  แก้ไข
                 </Button>
               </Box>
             </Toolbar>
@@ -160,7 +133,7 @@ function TeacherProfile() {
             <Box display={'flex'}>
               <Box flex={1} mr='1em'>
                 <Typography variant='h6' gutterBottom>
-                  ครู
+                  นักเรียนของคุณครู {}
                 </Typography>
                 <Box flex={2} mr='0.5em'>
                   <List
@@ -170,7 +143,7 @@ function TeacherProfile() {
                       bgcolor: 'background.paper',
                     }}
                   >
-                    {teacher.map((item, index) => (
+                    {student.map((item, index) => (
                       <ListItem
                         key={index}
                         onClick={() => navigate(`/teacher/${item.teacher_id}`)}
@@ -180,11 +153,11 @@ function TeacherProfile() {
                         </ListItemAvatar>
                         <ListItemText
                           primary={
-                            item.teacher_thai_firstname +
+                            item.student_fisrtname +
                             '  ' +
-                            item.teache_thai_lastname
+                            item.student_lastname
                           }
-                          secondary={item.teacher_nick_name}
+                          secondary={item.student_nickname}
                         />
                       </ListItem>
                     ))}
