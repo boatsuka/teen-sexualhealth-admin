@@ -6,6 +6,8 @@ import {
   Dialog,
   DialogContent,
   Grid,
+  MenuItem,
+  Select,
   TextField,
   Toolbar,
 } from '@mui/material'
@@ -22,6 +24,7 @@ import StockCard from '../components/StockCard'
 function Teacher() {
   const [data, setData] = React.useState([])
   const [open, setOpen] = React.useState(false)
+  const [school, setSchool] = React.useState([])
   const { reset, register, handleSubmit } = useForm()
 
   const handleClickOpen = () => {
@@ -80,6 +83,7 @@ function Teacher() {
         teacher_nick_name: data.teacher_nick_name,
         teacher_nickname_sound_path: 'string',
         teacher_image_path: 'string',
+        school: data.school_id
       })
       .then(() => {
         toast.success('เพิ่มข้อมูลคุณครูสำเร็จ')
@@ -99,20 +103,28 @@ function Teacher() {
       .catch((err) => console.error(err))
   }
 
-   const DeleteTeacherData = async (id) => {
-     await axios
-       .delete(`${process.env.REACT_APP_API}/teacher/remove/${id}`)
-       .then(() => {
-         toast.success('ลบข้อมูลสำเร็จแล้ว')
-         GetTeacherData()
-       })
-       .catch((err) => {
-         toast.error(`เกิดข้อผิดพลาด ${err}`)
-       })
-   }
+  const GetSchoolData = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_API}/school`)
+      .then((res) => setSchool(res.data))
+      .catch((err) => toast.error(err))
+  }
+
+  const DeleteTeacherData = async (id) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API}/teacher/remove/${id}`)
+      .then(() => {
+        toast.success('ลบข้อมูลสำเร็จแล้ว')
+        GetTeacherData()
+      })
+      .catch((err) => {
+        toast.error(`เกิดข้อผิดพลาด ${err}`)
+      })
+  }
 
   React.useEffect(() => {
     GetTeacherData()
+    GetSchoolData()
   }, [])
 
   const ShowDialog = () => {
@@ -143,6 +155,17 @@ function Teacher() {
               style={{ marginTop: 16, marginBottom: 16 }}
               {...register('teacher_nick_name')}
             />
+            <Select
+              fullWidth
+              {...register('school_id')}
+              style={{ marginBottom: 18 }}
+            >
+              {school.map((item, index) => (
+                <MenuItem key={index} value={item.school_id}>
+                  {item.school_thai_name}
+                </MenuItem>
+              ))}
+            </Select>
             <Button type='submit' fullWidth variant='outlined' autoFocus>
               ยืนยัน
             </Button>

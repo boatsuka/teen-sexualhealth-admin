@@ -57,7 +57,7 @@ function EditSchoolProfile() {
         school_province: data.school_province,
         school_postcode: data.school_postcode,
         coordinate_teacher_id: 0,
-        school_code_url: `http://147.50.231.136/?school=${id}`,
+        school_code_url: `${process.env.REACT_APP_WEB_BASE}?school=${id}`,
       })
       .then(async () => {
         await toast.success('บันทึกข้อมูลเรียบร้อยแล้ว')

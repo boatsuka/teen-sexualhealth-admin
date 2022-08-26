@@ -92,7 +92,7 @@ function School() {
       school_province: data.school_province,
       school_postcode: data.school_postcode,
       coordinate_teacher_id: 0,
-      school_code_url: data.school_code_url,
+      school_code_url: `${process.env.REACT_APP_WEB_BASE}/?school=0`,
     })
     await toast.success('เพิ่มข้อมูลโรงเรียนสำเร็จ')
     await setOpen(false)
@@ -167,12 +167,6 @@ function School() {
               label='รหัสไปรษณีย์'
               style={{ marginTop: 16 }}
               {...register('school_postcode')}
-            />
-            <TextField
-              fullWidth
-              label='ลิ้งค์โรงเรียน'
-              style={{ marginTop: 16, marginBottom: 16 }}
-              {...register('school_code_url')}
             />
             <Button type='submit' fullWidth variant='outlined' autoFocus>
               ยืนยัน

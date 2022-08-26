@@ -15,8 +15,9 @@ import Layout from './components/Layout'
 import StudentProfile from './pages/StudentProfile'
 import TeacherProfile from './pages/TeacherProfile'
 import Module from './pages/Module'
+import SubModule from './pages/SubModule'
 import EditSchoolProfile from './pages/EditSchoolProfile'
-
+import AddSubmoduleVideo from './pages/AddSubmoduleVideo'
 
 function App() {
   const theme = createTheme({
@@ -40,6 +41,8 @@ function App() {
               <Route path='teacher' element={<Teacher />} />
               <Route path='teacher/:id' element={<TeacherProfile />} />
               <Route path='module' element={<Module />} />
+              <Route path='submodule' element={<SubModule />} />
+              <Route path='submodule/vdo/add/:id' element={<AddSubmoduleVideo/>}/>
               <Route path='*' element={<Error />} />
             </Route>
           </Routes>

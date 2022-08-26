@@ -75,6 +75,14 @@ const Header = () => {
               <ListItemText primary='หน่วยการเรียนรู้' />
             </ListItem>
           </List>
+          <List>
+            <ListItem button component={Link} to='/submodule'>
+              <ListItemIcon>
+                <Book />
+              </ListItemIcon>
+              <ListItemText primary='หน่วยการเรียนรู้ย่อย' />
+            </ListItem>
+          </List>
         </Box>
       </Drawer>
     </>
